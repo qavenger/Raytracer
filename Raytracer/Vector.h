@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 
+
+
 class Vector3
 {
 public:
@@ -62,3 +64,22 @@ public:
 	float v[3];
 };
 
+
+
+float saturate(float val);
+Vector3 saturate(Vector3 val);
+float schlick(float cosine, float index);
+
+
+Vector3 reflect(const Vector3& v, const Vector3& n);
+bool refract(const Vector3& v, const Vector3& n, float Index, Vector3& refracted);
+
+Vector3 RandomInUnitSphere();
+
+const double inv_randmax = 1.0f / RAND_MAX;
+float drand();
+
+template<typename T>
+T lerp(T a, T b, float t) {
+	return a + (b - a)*t;
+}

@@ -1,7 +1,10 @@
 #include "pch.h"
 #include "Sphere.h"
 
-
+Vector3 RandomInUnitSphere()
+{
+	return (Vector3(drand(), drand(), drand()) * 2 - 1).normalized();
+}
 
 Sphere::Sphere(const Vector3 & center, float radius):
 	m_center(center), m_radius(radius)
@@ -16,7 +19,7 @@ bool Sphere::intersectRay(const Ray & ray, HitInfo* hit) const
 {
 	Vector3 oc = ray.Origin() - m_center;
 	float distSqr = oc.lengthSqr();
-	if (distSqr > (ray.TMax() + m_radius)*(ray.TMax() + m_radius))
+	if (distSqr > (ray.TMax() + std::fabsf(m_radius))*(ray.TMax() + std::fabsf(m_radius)))
 	{
 		return false;
 	}
@@ -31,6 +34,7 @@ bool Sphere::intersectRay(const Ray & ray, HitInfo* hit) const
 		hit->HitTime = (r1 * r2) < 0 ? fmax(r1, r2) : (r1 < 0 ? -1 : fmin(r1, r2));
 		hit->HitPoint = ray.Origin() + ray.Direction() * hit->HitTime;
 		hit->HitNormal = (hit->HitPoint - m_center)/m_radius;
+		hit->HitMat = m_material;
 	}
 	return hit->HitTime >= ray.TMin() && hit->HitTime<=ray.TMax();
 }
