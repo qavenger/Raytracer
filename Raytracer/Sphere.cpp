@@ -1,10 +1,6 @@
 #include "pch.h"
 #include "Sphere.h"
 
-Vector3 RandomInUnitSphere()
-{
-	return (Vector3(drand(), drand(), drand()) * 2 - 1).normalized();
-}
 
 Sphere::Sphere(const Vector3 & center, float radius):
 	m_center(center), m_radius(radius)
@@ -23,30 +19,45 @@ bool Sphere::intersectRay(const Ray & ray, HitInfo* hit) const
 	{
 		return false;
 	}
-	float b = 2 * oc.dot(ray.Direction());
+	float b = dot(oc, ray.Direction());
 	float c = distSqr - m_radius * m_radius;
-	float disc = b * b - 4 * c;
-	if (disc >= 0)
+	float disc = b * b - c;
+	if (disc > 0)
 	{
 		float discSqrt = sqrtf(disc);
-		float r1 = 0.5f * (-b + discSqrt);
-		float r2 = 0.5f * (-b - discSqrt);
-		hit->HitTime = (r1 * r2) < 0 ? fmax(r1, r2) : (r1 < 0 ? -1 : fmin(r1, r2));
-		hit->HitPoint = ray.Origin() + ray.Direction() * hit->HitTime;
+	/*	float r1 = (-b + discSqrt);
+		float r2 = (-b - discSqrt);
+	*/
+		bool found = false;
+		float t = -b - discSqrt;
+
+		if (t > ray.TMin() && t < ray.TMax())
+		{
+			hit->HitTime = t;
+			found = true;
+			goto FOUND;
+		}
+		
+		t = -b + discSqrt;
+		if (t > ray.TMin() && t < ray.TMax())
+		{
+			hit->HitTime = t;
+			found = true;
+			goto FOUND;
+		}
+		goto RS;
+		//hit->HitTime = (r1 * r2) < 0 ? fmax(r1, r2) : (r1 < 0 ? -1 : fmin(r1, r2));
+FOUND:
+		//std::cout << t << std::endl;
+		hit->HitPoint = ray.GetPoint(hit->HitTime);
 		hit->HitNormal = (hit->HitPoint - m_center)/m_radius;
 		hit->HitMat = m_material;
+RS:
+		return found;
 	}
-	return hit->HitTime >= ray.TMin() && hit->HitTime<=ray.TMax();
+	return false;
 }
 
-bool Sphere::intersectRay(const Ray & ray) const
-{
-	Vector3 oc = ray.Origin() - m_center;
-	float b = 2 * oc.dot(ray.Direction());
-	float c = oc.lengthSqr() - m_radius * m_radius;
-	float disc = b * b - 4 * c;
-	return disc>=0;
-}
 
 
 /*
@@ -54,7 +65,9 @@ bool Sphere::intersectRay(const Ray & ray) const
 	(p - c)^2 = r ^ 2
 	(o - c + td) ^ 2 = r ^ 2
 
-	(o-c)(o-c) - r*r + 2t(o-c)d + t*t;
+	(o-c)(o-c) - r*r + 2(o-c)dt + t*t;
+	a = 1
+	b = 2(o-c)d
+	c = distSqr - r*r
 
-	4(o-c)
 */

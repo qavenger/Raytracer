@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Material.h"
+#include "Random.h"
 
 bool Lambertian::Scatter(const Ray & ray, const HitInfo & hit, Vector3 & attenuation, Ray & scatteredRay) const
 {
@@ -14,48 +15,43 @@ bool Metal::Scatter(const Ray & ray, const HitInfo & hit, Vector3 & attenuation,
 	Vector3 reflected = reflect(ray.Direction(), hit.HitNormal);
 	scatteredRay = Ray(hit.HitPoint, reflected + RandomInUnitSphere() * roughness);
 	attenuation = albedo;
-	return scatteredRay.Direction().dot(hit.HitNormal) > 0;
+	return dot(scatteredRay.Direction(), hit.HitNormal) > 0;
 }
 
 bool Dielectric::Scatter(const Ray & ray, const HitInfo & hit, Vector3 & attenuation, Ray & scatteredRay) const
 {
 	Vector3 outNormal;
 	Vector3 reflected = reflect(ray.Direction(), hit.HitNormal);
-	float iot;
-	attenuation = Vector3(1, 1, 1);
-	float reflect_prob;
+	float ior;
+	attenuation = 1.0f;
 	float cosine;
-	float theta = ray.Direction().dot(hit.HitNormal);
+	float theta = dot(ray.Direction(), hit.HitNormal);
 	if (theta > 0)
 	{
 		outNormal = -hit.HitNormal;
-		iot = ref_idx;
+		ior = ref_idx;
 		cosine = ref_idx * theta;
 	}
 	else
 	{
 		outNormal = hit.HitNormal;
-		iot = 1 / ref_idx;
+		ior = 1 / ref_idx;
 		cosine = -theta;
 	}
 
 	Vector3 refracted;
-	if (refract(ray.Direction(), outNormal, iot, refracted))
+	if (refract(ray.Direction(), outNormal, ior, refracted))
 	{
-		reflect_prob = schlick(cosine, ref_idx);
-		
+		float reflect_prob = schlick(cosine, ref_idx);
+		if (Random::Next() >= reflect_prob)
+		{
+			scatteredRay = Ray(hit.HitPoint, refracted);
+		}
 	}
 	else
-	{
-		reflect_prob = 1;
-	}
-	if (drand() < reflect_prob)
 	{
 		scatteredRay = Ray(hit.HitPoint, reflected);
 	}
-	else
-	{
-		scatteredRay = Ray(hit.HitPoint, refracted);
-	}
+	
 	return true;
 }

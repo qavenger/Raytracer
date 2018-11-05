@@ -13,7 +13,6 @@ class Hitable
 {
 public:
 	virtual bool intersectRay(const Ray& ray, HitInfo* hit)const = 0;
-	virtual bool intersectRay(const Ray& ray)const = 0;
 
 public:
 	Material* m_material;

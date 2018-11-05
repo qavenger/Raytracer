@@ -1,0 +1,16 @@
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define OPERATOR_US(op) Vector3& operator op (float s){ x op s; y op s; z op s; return *this; }
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define OPERATOR_U(op) Vector3& operator op (const Vector3& v){ x op v.x; y op v.y; z op v.z; return *this; }
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define OPERATOR_B(op) Vector3 operator op (const Vector3& v)const{ return Vector3(x op v.x, y op v.y, z op v.z); }
+// Hint files help the Visual Studio IDE interpret Visual C++ identifiers
+// such as names of functions and macros.
+// For more information see https://go.microsoft.com/fwlink/?linkid=865984
+#define OPERATOR_BS(op) Vector3 operator op (float s)const{ return Vector3(x op s, y op s, z op s); }

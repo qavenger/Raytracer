@@ -31,12 +31,3 @@ bool HitableList::intersectRay(const Ray & ray, HitInfo * hit) const
 	}
 	return anyHit;
 }
-
-bool HitableList::intersectRay(const Ray & ray) const
-{
-	for (auto obj : m_list)
-	{
-		if (obj->intersectRay(ray))return true;
-	}
-	return false;
-}

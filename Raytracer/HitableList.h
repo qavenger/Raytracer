@@ -12,6 +12,5 @@ private:
 public:
 	// Inherited via Hitable
 	virtual bool intersectRay(const Ray & ray, HitInfo * hit) const override;
-	virtual bool intersectRay(const Ray & ray) const override;
 };
 
