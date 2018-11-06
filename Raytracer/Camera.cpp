@@ -2,17 +2,17 @@
 #include "Camera.h"
 
 
-Camera::Camera(float3 location, float3 lookAt, float3 vup, float FOV, float aspectRatio, float near, float far):
-	origin(location), near(near), far(far)
+Camera::Camera(float3 location, float3 lookAt, float3 vup, float FOV, float aspectRatio, float focus_dist, float aperture):
+	origin(location), lens_radius(aperture * 0.5f)
 {
-	float3 front = normalize(lookAt - location);
-	float3 side = normalize(cross(vup, front));
-	float3 up = cross(front, side);
 	float theta = FOV * DEG2RAD;
-	float halfHeight = tan(theta*0.5f) * near;
+	float halfHeight = tan(theta*0.5f) * focus_dist;
 	float halfWidth = aspectRatio * halfHeight;
+	front = normalize(lookAt - location);
+	side = normalize(cross(vup, front));
+	up = cross(front, side);
 	//ul = Vector3(1, -halfWidth , halfHeight);
-	ul = origin + front * near - side * halfWidth + up * halfHeight;
+	ul = origin + front * focus_dist - side * halfWidth + up * halfHeight;
 	vertical = -2 * halfHeight * up;
 	horizontal = 2 * halfWidth * side;
 }
@@ -24,6 +24,14 @@ Camera::~Camera()
 
 Ray Camera::GetRay(float u, float v) const
 {
-	return Ray(origin, (ul + horizontal * u + vertical * v) - origin, near, far);
+	float3 rd = lens_radius * RandomInUnitDisk();
+	//std::cout << rd << std::endl; 
+	float3 offset = side * rd.y + up * rd.z;
 
+
+	/*printf("{%f, %f, %f}\n", rd.x, rd.y, rd.z);
+
+	printf("{%f, %f, %f}\n", offset.x, offset.y, offset.z);*/
+	float3 rOrigin = origin + offset;
+	return Ray(rOrigin, ul + horizontal * u + vertical * v - rOrigin);
 }

@@ -47,7 +47,7 @@ public:
 	FRIEND_OPERATOR(*)
 	FRIEND_OPERATOR(/)
 
-	inline Vector3 length()const { return sqrt(x*x + y * y + z * z); }
+	inline float length()const { return sqrt(x*x + y * y + z * z); }
 	inline float lengthSqr()const { return x * x + y * y + z * z; }
 
 	float operator[](int i)const { assert(i >= 0 && i < 3); return i == 0 ? x : i == 1 ? y : z; }
@@ -89,6 +89,8 @@ public:
 	friend Vector3 reflect(const Vector3& v, const Vector3& n) {
 		return v - 2 * n * dot(v, n);
 	}
+	friend float dist(const Vector3& v0, const Vector3& v1) { return (v1 - v0).length(); }
+	friend float length(const Vector3& v) { return v.length(); }
 	friend bool refract(const Vector3& v, const Vector3& n, float IOR, Vector3& refracted)
 	{
 		float von = dot(v, n);
