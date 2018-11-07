@@ -5,8 +5,10 @@ class HitableList :
 	public Hitable
 {
 public:
-	HitableList(Hitable** list, int size);
+	HitableList() {};
+	//HitableList(Hitable** list, int size);
 	~HitableList();
+	void Add(Hitable* hitable);
 private:
 	std::vector<Hitable*> m_list;
 public:

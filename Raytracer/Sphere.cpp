@@ -2,9 +2,10 @@
 #include "Sphere.h"
 
 
-Sphere::Sphere(const Vector3 & center, float radius):
+Sphere::Sphere(const Vector3 & center, float radius, Material* mat):
 	m_center(center), m_radius(radius)
 {
+	m_material = mat;
 }
 
 Sphere::~Sphere()

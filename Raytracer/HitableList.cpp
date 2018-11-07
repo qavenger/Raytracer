@@ -1,18 +1,35 @@
 #include "pch.h"
 #include "HitableList.h"
+#include "Material.h"
 
 
-
-HitableList::HitableList(Hitable ** list, int size)
-{
-	for (int i = 0; i < size; ++i)
-	{
-		m_list.push_back(list[i]);
-	}
-}
+//
+//HitableList::HitableList(Hitable ** list, int size)
+//{
+//	for (int i = 0; i < size; ++i)
+//	{
+//		m_list.push_back(list[i]);
+//	}
+//}
 
 HitableList::~HitableList()
 {
+	int i = 0;
+	for (; i < 5; ++i)
+	{
+		delete m_list[i];
+	}
+	for(;i < m_list.size(); ++i)
+	{
+		delete m_list[i]->m_material;
+		delete  m_list[i];
+	}
+	m_list.clear();
+}
+
+void HitableList::Add(Hitable * hitable)
+{
+	m_list.push_back(hitable);
 }
 
 bool HitableList::intersectRay(const Ray & ray, HitInfo * hit) const

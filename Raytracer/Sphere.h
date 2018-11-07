@@ -5,7 +5,7 @@ class Sphere : public Hitable
 {
 public:
 	Sphere(){};
-	Sphere(const Vector3& center, float radius);
+	Sphere(const Vector3& center, float radius, Material* mat = nullptr);
 	virtual ~Sphere();
 	virtual bool intersectRay(const Ray& ray, HitInfo* hit)const override;
 private:
