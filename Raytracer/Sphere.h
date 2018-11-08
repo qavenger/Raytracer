@@ -11,5 +11,8 @@ public:
 private:
 	float m_radius = 0;
 	Vector3 m_center;
+
+	// Í¨¹ý Hitable ¼Ì³Ð
+	virtual bool bounding_box(float t0, float t1, AABB & aabb) const override;
 };
 
