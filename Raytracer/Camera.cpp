@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "Camera.h"
 
-
-Camera::Camera(float3 location, float3 lookAt, float3 vup, float FOV, float aspectRatio, float focus_dist, float aperture):
-	origin(location), lens_radius(aperture * 0.5f)
+Camera::Camera(float3 location, float3 lookAt, float3 vup, float FOV, float aspectRatio, float focus_dist, float aperture, float openDuration) :
+	origin(location), lens_radius(aperture * 0.5f), openDuration(openDuration)
 {
 	float theta = FOV * DEG2RAD;
 	float halfHeight = tan(theta*0.5f) * focus_dist;
@@ -32,6 +31,8 @@ Ray Camera::GetRay(float u, float v) const
 	/*printf("{%f, %f, %f}\n", rd.x, rd.y, rd.z);
 
 	printf("{%f, %f, %f}\n", offset.x, offset.y, offset.z);*/
+	float t = Random::Next() * openDuration;
+	//if (!isfinite(t)) t = 0;
 	float3 rOrigin = origin + offset;
-	return Ray(rOrigin, ul + horizontal * u + vertical * v - rOrigin);
+	return Ray(rOrigin, ul + horizontal * u + vertical * v - rOrigin, t);
 }

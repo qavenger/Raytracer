@@ -5,7 +5,7 @@
 bool Lambertian::Scatter(const Ray & ray, const HitInfo & hit, Vector3 & attenuation, Ray & scatteredRay) const
 {
 	Vector3 target = hit.HitNormal + RandomInUnitSphere();
-	scatteredRay = Ray(hit.HitPoint, target);
+	scatteredRay = Ray(hit.HitPoint, target, ray.Time());
 	attenuation = albedo;
 	return true;
 }
@@ -13,7 +13,7 @@ bool Lambertian::Scatter(const Ray & ray, const HitInfo & hit, Vector3 & attenua
 bool Metal::Scatter(const Ray & ray, const HitInfo & hit, Vector3 & attenuation, Ray & scatteredRay) const
 {
 	Vector3 reflected = reflect(ray.Direction(), hit.HitNormal);
-	scatteredRay = Ray(hit.HitPoint, reflected + RandomInUnitSphere() * roughness);
+	scatteredRay = Ray(hit.HitPoint, reflected + RandomInUnitSphere() * roughness, ray.Time());
 	attenuation = albedo;
 	return dot(scatteredRay.Direction(), hit.HitNormal) > 0;
 }
@@ -45,12 +45,12 @@ bool Dielectric::Scatter(const Ray & ray, const HitInfo & hit, Vector3 & attenua
 		float reflect_prob = schlick(cosine, ref_idx);
 		if (Random::Next() >= reflect_prob)
 		{
-			scatteredRay = Ray(hit.HitPoint, refracted);
+			scatteredRay = Ray(hit.HitPoint, refracted, ray.Time());
 		}
 	}
 	else
 	{
-		scatteredRay = Ray(hit.HitPoint, reflected);
+		scatteredRay = Ray(hit.HitPoint, reflected, ray.Time());
 	}
 	
 	return true;

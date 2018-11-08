@@ -6,7 +6,7 @@
 class Camera
 {
 public:
-	Camera(float3 location = float3(0, 0, 0), float3 lookAt = float3(1, 0, 0), float3 vup = float3(0,0,1), float FOV = 75.0f, float aspectRatio = 16.0f/9, float focus_dist = 5.0f, float aperture = 2.0f);
+	Camera(float3 location = float3(0, 0, 0), float3 lookAt = float3(1, 0, 0), float3 vup = float3(0, 0, 1), float FOV = 75.0f, float aspectRatio = 16.0f / 9, float focus_dist = 5.0f, float aperture = 2.0f, float openDuration = 0);
 	~Camera();
 
 	Ray GetRay(float u, float v)const;
@@ -18,6 +18,7 @@ public:
 	float3 front, side, up;
 	float near, far;
 	float lens_radius;
+	float openDuration;
 	static float3 RandomInUnitDisk() {
 		float3 p;
 		do
