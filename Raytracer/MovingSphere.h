@@ -19,5 +19,9 @@ private:
 	float3 m_velocity;
 	float m_radius;
 
+
+	// Í¨¹ý Hitable ¼Ì³Ð
+	virtual bool bounding_box( AABB & aabb) const override;
+
 };
 

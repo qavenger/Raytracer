@@ -48,3 +48,21 @@ bool HitableList::intersectRay(const Ray & ray, HitInfo * hit) const
 	}
 	return anyHit;
 }
+
+bool HitableList::bounding_box(AABB & aabb) const
+{
+	if (m_list.size() < 1)return false;
+	AABB tmpBox;
+	bool first = m_list[0]->bounding_box(tmpBox);
+	if (!first) return false;
+	else aabb = tmpBox;
+	for (int i = 0; i < (int)m_list.size(); ++i)
+	{
+		if (m_list[i]->bounding_box(tmpBox))
+		{
+			AABB::SurroundingBox(aabb, tmpBox, aabb);
+		}
+		else return false;
+	}
+	return true;
+}

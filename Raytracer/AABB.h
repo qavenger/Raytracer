@@ -22,6 +22,10 @@ public:
 		);
 	}
 	bool Hit(const Ray& r)const;
+	static void SurroundingBox(const AABB& box0, const AABB& box1, AABB& outBox)
+	{
+		outBox = AABB(min(box0.Min(), box1.Min()), max(box0.Max(), box1.Max()));
+	}
 private:
 	float3 m_point[2];
 };

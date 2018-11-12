@@ -59,7 +59,7 @@ RS:
 	return false;
 }
 
-bool Sphere::bounding_box(float t0, float t1, AABB & aabb) const
+bool Sphere::bounding_box(AABB & aabb) const
 {
 	aabb = AABB(m_center - m_radius, m_center + m_radius);
 	return true;

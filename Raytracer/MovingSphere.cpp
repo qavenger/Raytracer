@@ -74,3 +74,11 @@ bool MovingSphere::intersectRay(const Ray & ray, HitInfo * hit) const
 	}
 	return false;
 }
+
+bool MovingSphere::bounding_box(AABB & aabb) const
+{
+	AABB aabb1(m_center - m_radius, m_center + m_radius);
+	AABB aabb2(m_center + m_velocity - m_radius, m_center + m_velocity + m_radius);
+	AABB::SurroundingBox(aabb1, aabb2, aabb);
+	return true;
+}
